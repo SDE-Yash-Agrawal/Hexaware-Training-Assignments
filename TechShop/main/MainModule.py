@@ -48,21 +48,21 @@ class TechShop:
                 print('Exiting...')
                 break
             else:
-                print('Invalid choice. Please try again\n')
+                print('Invalid Choice. Please try Again\n')
 
     def customer_registration():
         # Take customer details
-        first_name = input('Enter your first name: ')
-        last_name = input('Enter your last name: ')
+        first_name = input('Enter your First Name: ')
+        last_name = input('Enter your Last Name: ')
         try:
-            email = input('Enter your email: ')
+            email = input('Enter your Email: ')
             if '@' not in email:
-                raise custom_exceptions.InvalidDataException('Invalid Email "@ is not mentioned!"')
+                raise custom_exceptions.InvalidDataException('Invalid Email "@ is not Mentioned!"')
         except custom_exceptions.InvalidDataException as e:
             print(e)
             return
-        phone = input('Enter your phone number: ')
-        address = input('Enter your address: ')
+        phone = input('Enter your Phone Number: ')
+        address = input('Enter your Address: ')
 
         customer = Customers("", first_name, last_name, email, phone, address)
         TechShopProcessor().CustomerRegistration(customer)
@@ -72,7 +72,7 @@ class TechShop:
         while True:
             print('\n1. Update Product Details')
             print('2. Show All Products')
-            print('3. Search for product in stock')
+            print('3. Search for Product in Stock')
             print('4. Exit')
             choice = int(input('Enter your Choice: '))
             if choice == 4:

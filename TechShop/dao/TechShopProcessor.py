@@ -23,7 +23,7 @@ class TechShopProcessor(ITechShopRepository):
                                                           customer.get_last_name(), customer.get_email(), 
                                                           customer.get_phone(), customer.get_address()))
             conn.commit()
-            print('Customer created successfully.\n')
+            print('Customer Created Successfully.\n')
         except custom_exceptions.InvalidDataException as e:
             conn.rollback()
             print(e)
@@ -43,7 +43,7 @@ class TechShopProcessor(ITechShopRepository):
                 return count>0
 
         def update_product_info():
-                product_id = int(input('Enter product ID: '))
+                product_id = int(input('Enter Product ID: '))
                 if check_product_exists(product_id):
                     conn = DBUtil.getDBConn()
                     cursor = conn.cursor()
@@ -69,9 +69,12 @@ class TechShopProcessor(ITechShopRepository):
                         cursor.execute(""" UPDATE Products SET Category = ?
                                    WHERE ProductID = ?""",
                                    (category,product_id))
+                    else:
+                        print("Enter Valid Choice, Try Again!!")
+                        return
                     conn.commit()
                     cursor.close()
-                    print('Product information updated successfully')
+                    print('Product Information Updated Successfully')
                 else:
                     print('Product Not found')
                     
@@ -80,7 +83,7 @@ class TechShopProcessor(ITechShopRepository):
             cursor = conn.cursor()
             try:
                 cursor.execute("SELECT * FROM Products")
-                print("Product details:")
+                print("Product Details:")
                 for row in cursor.fetchall():
                     print(row)
             finally:
@@ -88,16 +91,16 @@ class TechShopProcessor(ITechShopRepository):
                 conn.close()
 
         def product_in_stock():
-            product_id = int(input('Enter product ID: '))
+            product_id = int(input('Enter Product ID: '))
             conn = DBUtil.getDBConn()
             cursor = conn.cursor()
             try:
                 cursor.execute("SELECT QuantityInStock FROM Inventory WHERE ProductID = ?", (product_id,))
                 quantity = cursor.fetchone()[0]
                 if quantity>0:
-                    print(f'Product in stock: {quantity}')
+                    print(f'Product in Stock: {quantity}')
                 else:
-                    print('Product not in stock')
+                    print('Product not in Stock')
             except TypeError as e:
                 print("Product not Added in Inventory!")
             finally:
@@ -112,7 +115,7 @@ class TechShopProcessor(ITechShopRepository):
         elif choice == 3:
             product_in_stock()
         else:
-            print('Invalid choice. Please Try again')
+            print('Invalid Choice. Please Try Again!!')
 
     def Orders(self, choice):
 
@@ -122,11 +125,11 @@ class TechShopProcessor(ITechShopRepository):
                 cursor = conn.cursor()
 
                 customer_id = int(input('Enter Customer ID: '))
-                product_id = int(input('Enter product ID: '))
-                quantity = int(input('Enter quantity: '))
+                product_id = int(input('Enter Product ID: '))
+                quantity = int(input('Enter Quantity: '))
                 order_date = date.today()
                 if not product_id or not quantity:
-                    raise custom_exceptions.IncompleteOrderException("Enter All the details")
+                    raise custom_exceptions.IncompleteOrderException("Enter All the Details")
 
                 cursor.execute("SELECT Price FROM Products WHERE ProductID = ?", (product_id,))
                 row = cursor.fetchone()
@@ -164,7 +167,7 @@ class TechShopProcessor(ITechShopRepository):
                 print(e)
             except Exception as e:
                 conn.rollback()
-                print('Error creating Order', e)
+                print('Error Creating Order', e)
             finally:
                 cursor.close()
                 conn.close()
@@ -179,7 +182,7 @@ class TechShopProcessor(ITechShopRepository):
                                JOIN Orders O ON O.OrderID = OD.OrderID
                                WHERE O.CustomerID = ?""", (customer_id,))
                 orders = cursor.fetchall()
-                print(f"\nYou've ordered {len(orders)} times, below are those order details:")
+                print(f"\nYou've ordered {len(orders)} times, below are those Order Details:")
                 for order in orders:
                     print()
                     print(f"Order Detail ID: {order[0]}")
@@ -252,7 +255,7 @@ class TechShopProcessor(ITechShopRepository):
             try:
                 conn = DBUtil.getDBConn()
                 cursor = conn.cursor()
-                cursor.execute("SELECT Status FROM Orders WHERE OrderID = ?", (order_id,))
+                cursor.execute("SELECT Status FROM Orders WHERE OrderID = ?", (order_id))
                 status = cursor.fetchone()[0]
                 print("Your order status: ", status)
                 conn.commit()
